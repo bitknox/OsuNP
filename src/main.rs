@@ -2,24 +2,21 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::{
     fs::{self},
-    process::{Command, Stdio},
+    process::Command,
     thread,
 };
 use websocket::{ClientBuilder, OwnedMessage};
 
 fn main() {
     let token = read_token();
-    Command::new("./osu_memory/gosumemory.exe")
-        .stdout(Stdio::null())
-        .stderr(Stdio::null())
-        .spawn()
-        .unwrap();
+    Command::new("./osu_memory/gosumemory.exe").spawn().unwrap();
     std::thread::sleep(std::time::Duration::from_secs(10));
+    println!("[REPORTER] Connecting to websocket...");
     let client = ClientBuilder::new("ws://localhost:24050/ws")
         .unwrap()
         .connect_insecure()
         .unwrap();
-
+    println!("[REPORTER] Websocket connected!");
     let (mut receiver, _) = client.split().unwrap();
 
     thread::spawn(move || {
