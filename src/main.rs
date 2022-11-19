@@ -73,12 +73,10 @@ fn handle_update_message(message: Message, token: &str) -> Result<(), HandleErro
             .expect("Time went backwards")
             .as_millis(),
     };
-    send_update_reqeust(currently_playing);
-
-    Ok(())
+    send_update_reqeust(currently_playing)
 }
 
-fn send_update_reqeust(np: NowPlaying) -> bool {
+fn send_update_reqeust(np: NowPlaying) -> Result<(), HandleError> {
     reqwest::blocking::Client::new()
         .post("https://osu.bitknox.me/playing/update")
         .json(&PostBody {
@@ -87,7 +85,7 @@ fn send_update_reqeust(np: NowPlaying) -> bool {
         })
         .timeout(std::time::Duration::from_secs(10))
         .send()
-        .is_ok()
+        .map_or(Err(HandleError::new("reqwest")), |_| Ok(()))
 }
 
 fn get_i64(value: &Value, key: &str) -> Result<i64, HandleError> {
