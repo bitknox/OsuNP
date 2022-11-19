@@ -34,7 +34,7 @@ cargo build --realease
 
 To build it yourself, you will need to download [gosumemory](https://github.com/l3lackShark/gosumemory) and edit the code to point to the desired exe location.
 
-Further, you need to create a token.txt and place it beside the executable or edit the source.
+Further, you need to create a token.txt and place it beside the executable or edit the source. (token can be found by heading to [osu.bitknox.me](https://osu.bitknox.me))
 
 ## Contributing
 
