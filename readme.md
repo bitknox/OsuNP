@@ -47,4 +47,4 @@ to discuss what you would like to change.
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)
