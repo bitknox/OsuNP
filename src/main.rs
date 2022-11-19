@@ -5,77 +5,69 @@ use std::{
     process::Command,
     thread,
 };
-use websocket::{ClientBuilder, OwnedMessage};
+use tungstenite::Message;
 
 fn main() {
     let token = read_token();
     Command::new("./osu_memory/gosumemory.exe").spawn().unwrap();
     std::thread::sleep(std::time::Duration::from_secs(10));
     println!("[REPORTER] Connecting to websocket...");
-    let client = ClientBuilder::new("ws://localhost:24050/ws")
-        .unwrap()
-        .connect_insecure()
-        .unwrap();
+    let (mut client, _) = tungstenite::client::connect("ws://localhost:24050/ws").unwrap();
     println!("[REPORTER] Websocket connected!");
-    let (mut receiver, _) = client.split().unwrap();
-
     thread::spawn(move || {
         let mut last_updated = std::time::Instant::now();
 
-        for message in receiver.incoming_messages() {
-            if last_updated.elapsed().as_secs() > 5 {
-                last_updated = std::time::Instant::now();
-                if let Ok(msg) = message {
-                    match handle_update_message(msg, &token) {
-                        Ok(_) => (),
-                        Err(e) => println!("Error: {:?}", e),
-                    }
-                }
+        loop {
+            let msg = client.read_message().unwrap();
+            if !msg.is_text() || last_updated.elapsed().as_secs() < 5 {
+                continue;
+            };
+            match handle_update_message(msg, &token) {
+                Ok(_) => last_updated = std::time::Instant::now(),
+                Err(e) => println!("Error: {:?}", e),
             }
         }
     })
     .join()
     .unwrap();
+
+    println!("[REPORTER] Websocket connected!");
 }
 
-fn handle_update_message(message: OwnedMessage, token: &str) -> Result<(), HandleError> {
-    match message {
-        OwnedMessage::Text(text) => {
-            let message: Value = serde_json::from_str(&text).unwrap();
+fn handle_update_message(message: Message, token: &str) -> Result<(), HandleError> {
+    let message: Value = serde_json::from_str(message.to_text().unwrap()).unwrap();
 
-            let beatmap_info: &Value = message
-                .get("menu")
-                .and_then(|v| v.get("bm"))
-                .ok_or(HandleError::new("bm"))?;
+    let beatmap_info: &Value = message
+        .get("menu")
+        .and_then(|v| v.get("bm"))
+        .ok_or(HandleError::new("bm"))?;
 
-            let time: &Value = beatmap_info.get("time").ok_or(HandleError::new("time"))?;
-            let curr_time = get_i64(&time, "current")?;
+    let time: &Value = beatmap_info.get("time").ok_or(HandleError::new("time"))?;
+    let curr_time = get_i64(&time, "current")?;
 
-            let max_time = get_i64(&time, "mp3")?;
+    let max_time = get_i64(&time, "mp3")?;
 
-            let meta_data = beatmap_info
-                .get("metadata")
-                .ok_or(HandleError::new("metadata"))?;
+    let meta_data = beatmap_info
+        .get("metadata")
+        .ok_or(HandleError::new("metadata"))?;
 
-            let currently_playing = NowPlaying {
-                token: token.to_string(),
-                title: get_string(&meta_data, "title")?,
-                artist: get_string(&meta_data, "artist")?,
-                current_time: curr_time,
-                full_time: max_time,
-                beatmap_id: get_i64(&beatmap_info, "set")?.to_string(),
-                difficulty: get_string(&meta_data, "difficulty")?,
-                timestamp: std::time::SystemTime::now()
-                    .duration_since(std::time::UNIX_EPOCH)
-                    .expect("Time went backwards")
-                    .as_millis(),
-            };
-            send_update_reqeust(currently_playing);
+    let currently_playing = NowPlaying {
+        token: token.to_string(),
+        title: get_string(&meta_data, "title")?,
+        artist: get_string(&meta_data, "artist")?,
+        current_time: curr_time,
+        full_time: max_time,
+        beatmap_id: get_i64(&beatmap_info, "set")?.to_string(),
+        difficulty: get_string(&meta_data, "difficulty")?,
+        timestamp: std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .expect("Time went backwards")
+            .as_millis(),
+    };
+    println!("{:?}", currently_playing);
+    send_update_reqeust(currently_playing);
 
-            Ok(())
-        }
-        _ => Err(HandleError::new("Unknown message type")),
-    }
+    Ok(())
 }
 
 fn send_update_reqeust(np: NowPlaying) -> bool {
