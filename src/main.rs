@@ -64,7 +64,6 @@ fn handle_update_message(message: Message, token: &str) -> Result<(), HandleErro
             .expect("Time went backwards")
             .as_millis(),
     };
-    println!("{:?}", currently_playing);
     send_update_reqeust(currently_playing);
 
     Ok(())
