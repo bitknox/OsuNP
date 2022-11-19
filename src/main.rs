@@ -30,7 +30,6 @@ fn main() {
         loop {
             let msg = client.read_message().unwrap();
             if !msg.is_text() || last_updated.elapsed().as_secs() < 5 {
-                sleep(Duration::from_secs(5));
                 continue;
             };
             match handle_update_message(msg, &token) {
