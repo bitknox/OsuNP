@@ -1,4 +1,4 @@
-# OsueNowPlaying
+# OsuNowPlaying
 
 A program to display what you are currently playing on your osu! profile or elsewhere.
 
