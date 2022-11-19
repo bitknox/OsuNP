@@ -3,16 +3,26 @@ use serde_json::Value;
 use std::{
     fs::{self},
     process::Command,
-    thread,
+    thread::{self, sleep},
+    time::Duration,
 };
 use tungstenite::Message;
 
 fn main() {
     let token = read_token();
     Command::new("./osu_memory/gosumemory.exe").spawn().unwrap();
-    std::thread::sleep(std::time::Duration::from_secs(10));
+    sleep(Duration::from_secs(10));
     println!("[REPORTER] Connecting to websocket...");
-    let (mut client, _) = tungstenite::client::connect("ws://localhost:24050/ws").unwrap();
+    let mut client;
+    loop {
+        match tungstenite::client::connect("ws://localhost:24050/ws") {
+            Ok((c, _)) => {
+                client = c;
+                break;
+            }
+            Err(_) => sleep(Duration::from_secs(10)),
+        }
+    }
     println!("[REPORTER] Websocket connected!");
     thread::spawn(move || {
         let mut last_updated = std::time::Instant::now();
@@ -20,6 +30,7 @@ fn main() {
         loop {
             let msg = client.read_message().unwrap();
             if !msg.is_text() || last_updated.elapsed().as_secs() < 5 {
+                sleep(Duration::from_secs(5));
                 continue;
             };
             match handle_update_message(msg, &token) {
@@ -30,8 +41,6 @@ fn main() {
     })
     .join()
     .unwrap();
-
-    println!("[REPORTER] Websocket connected!");
 }
 
 fn handle_update_message(message: Message, token: &str) -> Result<(), HandleError> {
