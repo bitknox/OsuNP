@@ -5,7 +5,7 @@ A program to display what you are currently playing on your osu! profile or else
 ## Installation
 
 - Head to [osu.bitknox.me](https://osu.bitknox.me) and sign in
-- Click the install button to install all the required programs/config files
+- Click the download button to download all the required programs/config files
 - Extract the zip file and run the program
 
 ## Usage
