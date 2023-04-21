@@ -11,8 +11,9 @@ A program to display what you are currently playing on your osu! profile or else
 ## Usage
 
 When the program is running the link to your image will be located at: <https://osu.bitknox.me/playing?uId=${YOUR_ID}>
+You can add the parameter `&width=300`, which will change the width of the image to 300 pixels. You can insert any number here.
 
-The id can be found by heading to your osu! profile and copying from the URL.
+The ID can be found by heading to your osu! profile and copying from the URL.
 
 ### Example(updates live)
 
@@ -44,6 +45,8 @@ to discuss what you would like to change.
 ## Acknowledgements
 
 [gosumemory](https://github.com/l3lackShark/gosumemory) for making this project possible
+
+[TeQnix](https://github.com/TeQnix) for helping with design changes
 
 ## License
 
