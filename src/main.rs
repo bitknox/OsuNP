@@ -45,10 +45,9 @@ fn main() {
 fn handle_update_message(message: Message, token: &str) -> Result<(), HandleError> {
     let message: Value = serde_json::from_str(message.to_text().unwrap()).unwrap();
 
-    let beatmap_info: &Value = message
-        .get("menu")
-        .and_then(|v| v.get("bm"))
-        .ok_or(HandleError::new("bm"))?;
+    let menu = message.get("menu").ok_or(HandleError::new("menu"))?;
+
+    let beatmap_info: &Value = menu.get("bm").ok_or(HandleError::new("bm"))?;
 
     let time: &Value = beatmap_info.get("time").ok_or(HandleError::new("time"))?;
     let curr_time = get_i64(&time, "current")?;
@@ -63,8 +62,10 @@ fn handle_update_message(message: Message, token: &str) -> Result<(), HandleErro
         token: token.to_string(),
         title: get_string(&meta_data, "title")?,
         artist: get_string(&meta_data, "artist")?,
+        mode: get_i64(&menu, "gameMode")?,
         current_time: curr_time,
         full_time: max_time,
+        difficulty_id: get_i64(&beatmap_info, "id")?.to_string(),
         beatmap_id: get_i64(&beatmap_info, "set")?.to_string(),
         difficulty: get_string(&meta_data, "difficulty")?,
         timestamp: std::time::SystemTime::now()
@@ -127,6 +128,7 @@ struct PostBody {
 pub struct NowPlaying {
     pub token: String,
     pub title: String,
+    pub mode: i64,
     #[serde(rename(serialize = "currentTime"))]
     pub current_time: i64,
     #[serde(rename(serialize = "fullTime"))]
@@ -135,5 +137,6 @@ pub struct NowPlaying {
     pub beatmap_id: String,
     pub artist: String,
     pub difficulty: String,
+    pub difficulty_id: String,
     pub timestamp: u128,
 }
