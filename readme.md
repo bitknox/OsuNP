@@ -18,6 +18,7 @@ You can add multiple parameters to the URL.
 | uId | id | Your profile ID (required) |
 | width | number | Set the width of the image in pixels |
 | type | svg/png | Set the image file type |
+
 Example: <https://osu.bitknox.me/playing?uId=6971313&width=500&type=png>
 
 The ID can be found by heading to your osu! profile and copying from the URL.
