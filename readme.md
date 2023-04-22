@@ -11,7 +11,14 @@ A program to display what you are currently playing on your osu! profile or else
 ## Usage
 
 When the program is running the link to your image will be located at: <https://osu.bitknox.me/playing?uId=${YOUR_ID}>
-You can add the parameter `&width=300`, which will change the width of the image to 300 pixels. You can insert any number here.
+You can add multiple parameters to the URL.
+
+| Argument | Value | Description |
+| --- | --- | --- |
+| uId | id | Your profile ID (required) |
+| width | number | Set the width of the image in pixels |
+| type | svg/png | Set the image file type |
+Example: <https://osu.bitknox.me/playing?uId=6971313&width=500&type=png>
 
 The ID can be found by heading to your osu! profile and copying from the URL.
 
