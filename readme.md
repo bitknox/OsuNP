@@ -23,6 +23,7 @@ Example: <https://osu.bitknox.me/playing?uId=6971313&width=500&type=png>
 
 The ID can be found by heading to your osu! profile and copying from the URL.
 
+A redirect URL to the current map is also available <https://osu.bitknox.me/redirect?uId=${YOUR_ID}>
 ### Example(updates live)
 
 ![This is an image](https://osu.bitknox.me/playing?uId=6971313)
