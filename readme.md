@@ -57,6 +57,8 @@ to discuss what you would like to change.
 
 [TeQnix](https://github.com/TeQnix) for helping with design changes
 
+[Matte](https://github.com/matte-ek/) for ideas and motivating me to work on the project
+
 ## License
 
 [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)
