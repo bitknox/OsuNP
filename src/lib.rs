@@ -51,6 +51,7 @@ pub fn init() -> Result<(), OsuNPError> {
             }
         }
     });
+
     match systray::systray::start_sys_tray() {
         Ok(()) => (),
         Err(e) => log::error!("{}", e),

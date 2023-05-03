@@ -50,7 +50,7 @@ pub fn start_sys_tray() -> Result<(), OsuNPError> {
     let menu_channel = MenuEvent::receiver();
 
     event_loop.run(move |_event, _, control_flow| {
-        *control_flow = ControlFlow::Poll;
+        *control_flow = ControlFlow::Wait;
 
         if let Ok(event) = menu_channel.try_recv() {
             if event.id == quit_i.id() {
