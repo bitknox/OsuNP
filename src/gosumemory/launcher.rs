@@ -10,14 +10,14 @@ pub fn launch() -> Child {
         .creation_flags(CREATE_NO_WINDOW)
         .spawn()
         .unwrap()
-    //let _guard = ChildGuard(child);
 }
 
 //TODO: Create mac and linux version (maybe) :)
 #[cfg(any(target_os = "linux", target_os = "macos"))]
-pub fn launch() {
-    let _command = Command::new("./osu_memory/gosumemory.exe")
+pub fn launch() -> Child {
+    Command::new("./osu_memory/gosumemory")
         .stdout(Stdio::null())
         .stderr(Stdio::null())
-        .spawn();
+        .spawn()
+        .unwrap()
 }
