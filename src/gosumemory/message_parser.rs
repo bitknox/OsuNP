@@ -8,7 +8,7 @@ use crate::{
 use super::status_message::StatusMessage;
 
 pub fn handle_update_message(message: Message, token: &str) -> Result<(), OsuNPError> {
-    let message: StatusMessage = serde_json::from_str(message.to_text()?)?;
+    let message: StatusMessage = serde_json::from_str(message.to_text()?).unwrap();
 
     let currently_playing = NowPlaying {
         token: token.to_string(),

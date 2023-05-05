@@ -28,9 +28,9 @@ pub fn init() -> Result<(), OsuNPError> {
         Ok(_) => log::info!("logger initialized"),
         Err(_) => println!("Unable to initialize logger"),
     };
-    gosumemory::launcher::launch();
+    let child = gosumemory::launcher::launch();
 
-    let pair = systray::np_tray::start_sys_tray()?;
+    let pair = systray::np_tray::start_sys_tray(child)?;
     let sender_handle = Arc::new(Mutex::new(pair));
     let last_updated = Arc::new(AtomicI64::new(0));
 

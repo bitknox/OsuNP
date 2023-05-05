@@ -1,5 +1,9 @@
 use std::{
-    sync::mpsc::{channel, Sender},
+    process::Child,
+    sync::{
+        mpsc::{channel, Sender},
+        Arc, Mutex,
+    },
     thread::JoinHandle,
     time::Duration,
 };
@@ -40,8 +44,10 @@ fn load_icon(path: &std::path::Path) -> Result<tray_icon::icon::Icon, OsuNPError
     )?)
 }
 
-pub fn start_sys_tray() -> Result<(Sender<TrayState>, JoinHandle<()>), OsuNPError> {
+pub fn start_sys_tray(child: Child) -> Result<(Sender<TrayState>, JoinHandle<()>), OsuNPError> {
     let (send, recv) = channel::<TrayState>();
+    let child_arc = Arc::new(Mutex::new(child));
+
     let handle = std::thread::spawn(move || {
         let waiting_icon = load_icon(std::path::Path::new("./assets/osu_waiting.png")).unwrap();
         let connected_icon = load_icon(std::path::Path::new("./assets/osu_success.png")).unwrap();
@@ -73,7 +79,11 @@ pub fn start_sys_tray() -> Result<(Sender<TrayState>, JoinHandle<()>), OsuNPErro
 
         let menu_channel = MenuEvent::receiver();
         let mut current_state = TrayState::Waiting;
+        let _clean_up = Cleanup {
+            child: child_arc.clone(),
+        };
         event_loop.run(move |_event, _, control_flow| {
+            let _c = &_clean_up;
             *control_flow = ControlFlow::WaitUntil(
                 std::time::Instant::now()
                     .checked_add(Duration::from_secs(1))
@@ -100,4 +110,14 @@ pub fn start_sys_tray() -> Result<(Sender<TrayState>, JoinHandle<()>), OsuNPErro
         })
     });
     Ok((send, handle))
+}
+
+struct Cleanup {
+    pub child: Arc<Mutex<Child>>,
+}
+
+impl Drop for Cleanup {
+    fn drop(&mut self) {
+        self.child.lock().unwrap().kill().unwrap();
+    }
 }

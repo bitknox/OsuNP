@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"]
+#![windows_subsystem = "console"]
 use native_dialog::{MessageDialog, MessageType};
 fn main() {
     let orig_hook = std::panic::take_hook();
