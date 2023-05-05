@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::error::error::OsuNPError;
+use crate::error::np_error::OsuNPError;
 
 #[derive(Debug, Serialize)]
 struct PostBody {

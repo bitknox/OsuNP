@@ -1,1 +1,1 @@
-pub mod error;
+pub mod np_error;

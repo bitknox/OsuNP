@@ -1,1 +1,1 @@
-pub mod systray;
+pub mod np_tray;
