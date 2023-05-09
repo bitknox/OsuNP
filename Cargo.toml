@@ -12,7 +12,7 @@ serde_json = "1.0.88"
 reqwest = { features = ["json", "blocking"] }
 tray-icon = "0.5.0"
 image = "0.24.6"
-winit = "0.28.3"
+winit = "0.28.5"
 chrono = "0.4.24"
 simple-logging = "2.0.2"
 log = "0.4.17"
