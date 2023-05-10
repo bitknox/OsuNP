@@ -18,6 +18,6 @@ simple-logging = "2.0.2"
 log = "0.4.17"
 directories = "5.0.1"
 custom_error = "1.9.2"
-tokio = {version = "1.27.0" }
+tokio = {version = "1.28.1" }
 native-dialog = "0.6.3"
 
