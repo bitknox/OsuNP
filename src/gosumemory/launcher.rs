@@ -1,5 +1,6 @@
 const CREATE_NO_WINDOW: u32 = 0x08000000;
 use std::process::{Child, Command, Stdio};
+use sysinfo::{ProcessRefreshKind, RefreshKind, System, SystemExt};
 #[cfg(target_os = "windows")]
 pub fn launch() -> Child {
     use std::os::windows::process::CommandExt;
@@ -20,4 +21,11 @@ pub fn launch() -> Child {
         .stderr(Stdio::null())
         .spawn()
         .unwrap()
+}
+
+pub fn check_running() -> bool {
+    let s = System::new_with_specifics(
+        RefreshKind::new().with_processes(ProcessRefreshKind::everything()),
+    );
+    s.processes_by_name("gosumemory").count() > 0
 }

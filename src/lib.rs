@@ -99,6 +99,9 @@ fn connect_websocket() -> WebSocket<MaybeTlsStream<TcpStream>> {
                 log::debug!(
                     "Could not connect to gosumemory websocket... Retrying in 10 seconds..."
                 );
+                if !gosumemory::launcher::check_running() {
+                    gosumemory::launcher::launch();
+                }
                 std::thread::sleep(std::time::Duration::from_secs(10))
             }
         }
