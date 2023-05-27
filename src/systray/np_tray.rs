@@ -118,6 +118,9 @@ struct Cleanup {
 
 impl Drop for Cleanup {
     fn drop(&mut self) {
-        self.child.lock().unwrap().kill().unwrap();
+        match self.child.lock().unwrap().kill() {
+            Ok(_) => log::info!("Gracefully ended gosumemory"),
+            Err(_) => log::error!("gosumemory handler no longer active"),
+        }
     }
 }
