@@ -19,6 +19,6 @@ log = "0.4.17"
 directories = "5.0.1"
 custom_error = "1.9.2"
 tokio = {version = "1.28.1" }
-native-dialog = "0.6.3"
+native-dialog = "0.6.4"
 sysinfo = "0.29.0"
 
