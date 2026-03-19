@@ -42,7 +42,7 @@ cd OsuNP
 cargo build --realease 
 ```
 
-To build it yourself, you will need to download [gosumemory](https://github.com/l3lackShark/gosumemory) and edit the code to point to the desired exe location.
+To build it yourself, you will need to download [tosu](https://github.com/KotRikD/tosu) and place the executable at `./osu_memory/tosu.exe`.
 
 Further, you need to create a token.txt and place it beside the executable or edit the source. (token can be found by heading to [osu.bitknox.me](https://osu.bitknox.me))
 
@@ -53,7 +53,9 @@ to discuss what you would like to change.
 
 ## Acknowledgements
 
-[gosumemory](https://github.com/l3lackShark/gosumemory) for making this project possible
+[gosumemory](https://github.com/l3lackShark/gosumemory) for originally making this project possible
+
+[tosu](https://github.com/KotRikD/tosu) for the continued development of the gosu-compatible API
 
 [TeQnix](https://github.com/TeQnix) for helping with design changes
 

@@ -5,7 +5,7 @@ use sysinfo::{ProcessRefreshKind, RefreshKind, System, SystemExt};
 pub fn launch() -> Child {
     use std::os::windows::process::CommandExt;
 
-    Command::new("./osu_memory/gosumemory.exe")
+    Command::new("./osu_memory/tosu.exe")
         .stdout(Stdio::null())
         .stderr(Stdio::null())
         .creation_flags(CREATE_NO_WINDOW)
@@ -16,7 +16,7 @@ pub fn launch() -> Child {
 //TODO: Create mac and linux version (maybe) :)
 #[cfg(any(target_os = "linux", target_os = "macos"))]
 pub fn launch() -> Child {
-    Command::new("./osu_memory/gosumemory")
+    Command::new("./osu_memory/tosu")
         .stdout(Stdio::null())
         .stderr(Stdio::null())
         .spawn()
@@ -27,5 +27,5 @@ pub fn check_running() -> bool {
     let s = System::new_with_specifics(
         RefreshKind::new().with_processes(ProcessRefreshKind::everything()),
     );
-    s.processes_by_name("gosumemory").count() > 0
+    s.processes_by_name("tosu").count() > 0
 }

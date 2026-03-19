@@ -1,6 +1,6 @@
 custom_error! {
     pub OsuNPError
-    TokenRead{source:std::io::Error}      = "Could not read token or gosumemory",
+    TokenRead{source:std::io::Error}      = "Could not read token",
     Image{source: image::ImageError} = "Failed to parse icon image",
     Icon{source: tray_icon::icon::BadIcon} = "Failed to create icon from image",
     JsonRead{token:String} = "Could not read JSON path: {token}",

@@ -18,9 +18,9 @@ extern crate custom_error;
 
 mod api;
 mod error;
-mod gosumemory;
 mod logging;
 mod systray;
+mod tosu;
 
 pub fn init() -> Result<(), OsuNPError> {
     let token = read_token()?;
@@ -28,7 +28,7 @@ pub fn init() -> Result<(), OsuNPError> {
         Ok(_) => log::info!("logger initialized"),
         Err(_) => println!("Unable to initialize logger"),
     };
-    let child = gosumemory::launcher::launch();
+    let child = tosu::launcher::launch();
 
     let pair = systray::np_tray::start_sys_tray(child)?;
     let sender_handle = Arc::new(Mutex::new(pair));
@@ -54,7 +54,7 @@ pub fn init() -> Result<(), OsuNPError> {
                     let _ = p.0.send(TrayState::Active);
                 }
 
-                match gosumemory::message_parser::handle_update_message(msg, &token) {
+                match tosu::message_parser::handle_update_message(msg, &token) {
                     Ok(_) => {
                         let start = SystemTime::now();
                         let since_the_epoch = start
@@ -96,11 +96,9 @@ fn connect_websocket() -> WebSocket<MaybeTlsStream<TcpStream>> {
         match tungstenite::client::connect("ws://localhost:24050/ws") {
             Ok((c, _)) => break c,
             Err(_) => {
-                log::debug!(
-                    "Could not connect to gosumemory websocket... Retrying in 10 seconds..."
-                );
-                if !gosumemory::launcher::check_running() {
-                    gosumemory::launcher::launch();
+                log::debug!("Could not connect to tosu websocket... Retrying in 10 seconds...");
+                if !tosu::launcher::check_running() {
+                    tosu::launcher::launch();
                 }
                 std::thread::sleep(std::time::Duration::from_secs(10))
             }
